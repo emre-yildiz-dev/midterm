@@ -8,6 +8,7 @@ def query_record(inputs: List[List[float]], output: List[float], index: int) -> 
     print("Inputs:", inputs[index])
     print("Output:", output[index])
 
+
 def cost_function(X: List[List[float]], y: List[float], weights: List[float]) -> float:
     predictions = [sum(x_i * w_i for x_i, w_i in zip(x, weights)) for x in X]
     cost = sum((pred - actual) ** 2 for pred, actual in zip(predictions, y)) / len(y)
@@ -49,9 +50,8 @@ def optimizer(X: List[List[float]], y: List[float], weights: List[float], learni
     return weights
 
 
-
 def train_model(X, y, learning_rate, iterations, l1_ratio, alpha) -> List[float]:
-    weights = [0.0 for _ in range(len(X[0]))]  # Initialize weights as a Python list
+    weights = np.random.normal(0, 1, size=len(X[0]))
     for _ in range(iterations):
         derivatives = derivative_cost_function(X, y, weights)
         clipped_derivatives = clip_gradients(derivatives, threshold=1.0)  # Implement gradient clipping
@@ -82,6 +82,13 @@ def predict(X_new: List[List[float]], weights: List[float]) -> List[float]:
     return predictions
 
 
+def predict_output(test_data, trained_weights):
+    predictions = []
+    for record in test_data:
+        # Calculate the predicted output for the record
+        prediction = sum(record[i] * trained_weights[i] for i in range(len(record)))
+        predictions.append(prediction)
+    return predictions
 
 def read_dataset(file_path: str):
     # Read the Excel file, skipping initial non-relevant rows
@@ -96,6 +103,7 @@ def read_dataset(file_path: str):
     output = df.iloc[:, -1].values.tolist()   # The last column as output
 
     return inputs, output
+
 
 def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -118,7 +126,6 @@ def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-
 def main() -> None:
     # Path to the dataset file
     file_path = 'data/dataset.xlsx'
@@ -136,15 +143,24 @@ def main() -> None:
         print(f"Record {record_index} is out of range.")
 
     # Model Hyperparameters
-    learning_rate = 0.001
+    learning_rate = 0.01
     iterations = 1000
-    l1_ratio = 0.5  # Adjust as needed
-    alpha = 0.1  # Adjust as needed
+    l1_ratio = 0.3  # Experiment with different ratios
+    alpha = 0.05
 
     # Train the model with Elastic Net regularization
     trained_weights = train_model(inputs, output, learning_rate, iterations, l1_ratio, alpha)
     print(trained_weights)
-    # You can now use the trained model for predictions or further analysis
+
+    test_data = [
+        [3524.0, 38.6986, 49.8681, 22.6003, 1.7866, 20.101, 13.7723, 61.3704],
+        [4524.0, 18.6986, 59.8681, 22.6003, 1.7866, 20.101, 13.7723, 61.3704],
+        [4524.0, 18.6986, 16.8681, 21.6003, 1.7866, 20.101, 13.7723, 61.3704],
+        [4524.0, 18.6986, 19.8681, 22.6003, 4.7866, 20.101, 13.7723, 61.3704],
+        # Add more test records as needed
+    ]
+    predictions = predict_output(test_data, trained_weights)
+    print(predictions)
 
 
 if __name__ == '__main__':
