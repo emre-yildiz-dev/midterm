@@ -77,6 +77,7 @@ def elastic_net_cost_function(X: List[List[float]], y: List[float], weights: Lis
     return cost
 
 
+
 def predict(X_new: List[List[float]], weights: List[float]) -> List[float]:
     predictions = [sum(x_i * w_i for x_i, w_i in zip(x, weights)) for x in X_new]
     return predictions
@@ -133,6 +134,7 @@ def main() -> None:
     # Read the dataset and extract inputs and outputs
     inputs, output = read_dataset(file_path)
 
+
     # Query a specific record, for example, the 4500th record
     record_index = 4500
     if record_index < len(inputs):
@@ -145,11 +147,11 @@ def main() -> None:
     # Model Hyperparameters
     learning_rate = 0.01
     iterations = 1000
-    l1_ratio = 0.3  # Experiment with different ratios
-    alpha = 0.05
+    l1_ratio = 0.5
+    alpha = 0.1
 
-    # Train the model with Elastic Net regularization
     trained_weights = train_model(inputs, output, learning_rate, iterations, l1_ratio, alpha)
+
     print(trained_weights)
 
     test_data = [
@@ -157,7 +159,6 @@ def main() -> None:
         [4524.0, 18.6986, 59.8681, 22.6003, 1.7866, 20.101, 13.7723, 61.3704],
         [4524.0, 18.6986, 16.8681, 21.6003, 1.7866, 20.101, 13.7723, 61.3704],
         [4524.0, 18.6986, 19.8681, 22.6003, 4.7866, 20.101, 13.7723, 61.3704],
-        # Add more test records as needed
     ]
     predictions = predict_output(test_data, trained_weights)
     print(predictions)
