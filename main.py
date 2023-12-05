@@ -33,16 +33,16 @@ def derivative_cost_function(X: List[List[float]], y: List[float], weights: List
     return derivatives
 
 
-
-
-def optimizer(X: List[List[float]], y: List[float], weights: List[float], learning_rate: float, iterations: int) -> List[float]:
+def optimizer(X: List[List[float]], y: List[float], weights: List[float], learning_rate: float, iterations: int) -> \
+List[float]:
     m = len(y)
     derivatives = [0 for _ in range(len(weights))]  # Initialize derivatives
 
     for _ in range(iterations):
         # Update derivatives in each iteration
         for j in range(len(weights)):
-            derivatives[j] = sum((sum(x_i * w_i for x_i, w_i in zip(x, weights)) - y[i]) * X[i][j] for i, x in enumerate(X)) / m
+            derivatives[j] = sum(
+                (sum(x_i * w_i for x_i, w_i in zip(x, weights)) - y[i]) * X[i][j] for i, x in enumerate(X)) / m
 
         # Update weights
         weights = [w - learning_rate * dw for w, dw in zip(weights, derivatives)]
@@ -59,28 +59,22 @@ def train_model(X, y, learning_rate, iterations, l1_ratio, alpha) -> List[float]
     return weights  # Return the final trained weights as a list
 
 
-
 def sigmoid(z):
     if z < -20:  # Threshold to avoid too large negative values
         z = -20
     return 1 / (1 + np.exp(-z))
 
+
 def clip_gradients(derivatives, threshold):
     return [max(min(dw, threshold), -threshold) for dw in derivatives]
 
 
-
-def elastic_net_cost_function(X: List[List[float]], y: List[float], weights: List[float], l1_ratio: float, alpha: float) -> float:
+def elastic_net_cost_function(X: List[List[float]], y: List[float], weights: List[float], l1_ratio: float,
+                              alpha: float) -> float:
     l1_penalty = l1_ratio * sum(abs(w) for w in weights)
     l2_penalty = (1 - l1_ratio) * sum(w ** 2 for w in weights)
     cost = cost_function(X, y, weights) + alpha * (l1_penalty + l2_penalty)
     return cost
-
-
-
-def predict(X_new: List[List[float]], weights: List[float]) -> List[float]:
-    predictions = [sum(x_i * w_i for x_i, w_i in zip(x, weights)) for x in X_new]
-    return predictions
 
 
 def predict_output(test_data, trained_weights):
@@ -90,6 +84,7 @@ def predict_output(test_data, trained_weights):
         prediction = sum(record[i] * trained_weights[i] for i in range(len(record)))
         predictions.append(prediction)
     return predictions
+
 
 def read_dataset(file_path: str):
     # Read the Excel file, skipping initial non-relevant rows
@@ -101,7 +96,7 @@ def read_dataset(file_path: str):
 
     # Split into inputs and output
     inputs = df.iloc[:, :-1].values.tolist()  # All columns except the last one as inputs
-    output = df.iloc[:, -1].values.tolist()   # The last column as output
+    output = df.iloc[:, -1].values.tolist()  # The last column as output
 
     return inputs, output
 
@@ -134,15 +129,14 @@ def main() -> None:
     # Read the dataset and extract inputs and outputs
     inputs, output = read_dataset(file_path)
 
-
-    # Query a specific record, for example, the 4500th record
-    record_index = 4500
+    # Query a specific record, for example, the 3500th record
+    record_index = 3500
     if record_index < len(inputs):
-        print(f"Record {record_index}:")
+        print(f"Record {record_index + 1}:")  # Adding +1 to match human indexing
         print("Inputs:", inputs[record_index])
         print("Output:", output[record_index])
     else:
-        print(f"Record {record_index} is out of range.")
+        print(f"Record {record_index + 1} is out of range.")
 
     # Model Hyperparameters
     learning_rate = 0.01
@@ -152,7 +146,9 @@ def main() -> None:
 
     trained_weights = train_model(inputs, output, learning_rate, iterations, l1_ratio, alpha)
 
-    print(trained_weights)
+    print("\nTrained Model Weights:")
+    for i, weight in enumerate(trained_weights):
+        print(f"Weight {i + 1}: {weight:.4f}")
 
     test_data = [
         [3524.0, 38.6986, 49.8681, 22.6003, 1.7866, 20.101, 13.7723, 61.3704],
@@ -160,12 +156,13 @@ def main() -> None:
         [4524.0, 18.6986, 16.8681, 21.6003, 1.7866, 20.101, 13.7723, 61.3704],
         [4524.0, 18.6986, 19.8681, 22.6003, 4.7866, 20.101, 13.7723, 61.3704],
     ]
+
     predictions = predict_output(test_data, trained_weights)
-    print(predictions)
+
+    print("\nPredicted Outputs:")
+    for i, prediction in enumerate(predictions):
+        print(f"Test Record {i + 1}: {prediction:.4f}")
 
 
 if __name__ == '__main__':
     main()
-
-
-
