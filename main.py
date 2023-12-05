@@ -35,19 +35,38 @@ def derivative_cost_function(X: List[List[float]], y: List[float], weights: List
 
 
 def optimizer(X: List[List[float]], y: List[float], weights: List[float], learning_rate: float, iterations: int) -> List[float]:
+    m = len(y)
+    derivatives = [0 for _ in range(len(weights))]  # Initialize derivatives
+
     for _ in range(iterations):
-        derivatives = derivative_cost_function(X, y, weights)
+        # Update derivatives in each iteration
+        for j in range(len(weights)):
+            derivatives[j] = sum((sum(x_i * w_i for x_i, w_i in zip(x, weights)) - y[i]) * X[i][j] for i, x in enumerate(X)) / m
+
+        # Update weights
         weights = [w - learning_rate * dw for w, dw in zip(weights, derivatives)]
+
     return weights
 
 
-def train_model(X: List[List[float]], y: List[float], learning_rate: float, iterations: int, l1_ratio: float, alpha: float) -> List[float]:
-    weights = [0.0 for _ in range(len(X[0]))]  # Initialize weights
+
+def train_model(X, y, learning_rate, iterations, l1_ratio, alpha) -> List[float]:
+    weights = [0.0 for _ in range(len(X[0]))]  # Initialize weights as a Python list
     for _ in range(iterations):
-        cost = elastic_net_cost_function(X, y, weights, l1_ratio, alpha)
         derivatives = derivative_cost_function(X, y, weights)
-        weights = [w - learning_rate * dw for w, dw in zip(weights, derivatives)]
-    return weights
+        clipped_derivatives = clip_gradients(derivatives, threshold=1.0)  # Implement gradient clipping
+        weights = [w - learning_rate * dw for w, dw in zip(weights, clipped_derivatives)]
+    return weights  # Return the final trained weights as a list
+
+
+
+def sigmoid(z):
+    if z < -20:  # Threshold to avoid too large negative values
+        z = -20
+    return 1 / (1 + np.exp(-z))
+
+def clip_gradients(derivatives, threshold):
+    return [max(min(dw, threshold), -threshold) for dw in derivatives]
 
 
 
@@ -117,7 +136,7 @@ def main() -> None:
         print(f"Record {record_index} is out of range.")
 
     # Model Hyperparameters
-    learning_rate = 0.01
+    learning_rate = 0.001
     iterations = 1000
     l1_ratio = 0.5  # Adjust as needed
     alpha = 0.1  # Adjust as needed
@@ -131,15 +150,5 @@ def main() -> None:
 if __name__ == '__main__':
     main()
 
-    # # Training
-    # learning_rate = 0.01
-    # iterations = 1000
-    # l1_ratio = 0.5
-    # alpha = 0.1
-    # weights = train_model(inputs, output, learning_rate, iterations)
-    #
-    # # Predicting
-    # X_new = [[...]]  # New input data
-    # predicted_output = predict(X_new, weights)
-    # print("Predicted Output:", predicted_output)
+
 
