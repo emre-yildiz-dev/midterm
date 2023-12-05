@@ -87,9 +87,7 @@ def predict_output(test_data, trained_weights):
 
 
 def read_dataset(file_path: str):
-    # Read the Excel file, skipping initial non-relevant rows
-    # Adjust 'skiprows' as needed to skip header/metadata rows
-    df = pd.read_excel(file_path, skiprows=2)
+    df = pd.read_excel(file_path, skiprows=0)
 
     # Drop non-numeric columns and rows with missing values
     df = df.select_dtypes(include=[np.number]).dropna()
@@ -130,13 +128,14 @@ def main() -> None:
     inputs, output = read_dataset(file_path)
 
     # Query a specific record, for example, the 3500th record
-    record_index = 3500
+    record_index = 3400
+
     if record_index < len(inputs):
-        print(f"Record {record_index + 1}:")  # Adding +1 to match human indexing
-        print("Inputs:", inputs[record_index])
-        print("Output:", output[record_index])
+        print(f"Record {record_index}:")
+        print("Inputs:", inputs[record_index - 2])
+        print("Output:", output[record_index - 2])
     else:
-        print(f"Record {record_index + 1} is out of range.")
+        print(f"Record {record_index} is out of range.")
 
     # Model Hyperparameters
     learning_rate = 0.01
@@ -151,10 +150,7 @@ def main() -> None:
         print(f"Weight {i + 1}: {weight:.4f}")
 
     test_data = [
-        [3524.0, 38.6986, 49.8681, 22.6003, 1.7866, 20.101, 13.7723, 61.3704],
-        [4524.0, 18.6986, 59.8681, 22.6003, 1.7866, 20.101, 13.7723, 61.3704],
-        [4524.0, 18.6986, 16.8681, 21.6003, 1.7866, 20.101, 13.7723, 61.3704],
-        [4524.0, 18.6986, 19.8681, 22.6003, 4.7866, 20.101, 13.7723, 61.3704],
+        [4.8086, 5.6025, 6.273, 0.54222, 4.8271, 3.6353, 15.9566]
     ]
 
     predictions = predict_output(test_data, trained_weights)
