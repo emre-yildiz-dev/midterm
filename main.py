@@ -15,6 +15,20 @@ def cost_function(X: List[List[float]], y: List[float], weights: List[float]) ->
     return cost
 
 
+def lasso_cost_function(X: List[List[float]], y: List[float], weights: List[float], alpha: float) -> float:
+    predictions = [sum(x_i * w_i for x_i, w_i in zip(x, weights)) for x in X]
+    l1_penalty = alpha * sum(abs(w) for w in weights)
+    cost = sum((pred - actual) ** 2 for pred, actual in zip(predictions, y)) / len(y) + l1_penalty
+    return cost
+
+
+def ridge_cost_function(X: List[List[float]], y: List[float], weights: List[float], alpha: float) -> float:
+    predictions = [sum(x_i * w_i for x_i, w_i in zip(x, weights)) for x in X]
+    l2_penalty = alpha * sum(w ** 2 for w in weights)
+    cost = sum((pred - actual) ** 2 for pred, actual in zip(predictions, y)) / len(y) + l2_penalty
+    return cost
+
+
 def derivative_cost_function(X: List[List[float]], y: List[float], weights: List[float]) -> List[float]:
     m = len(y)  # Number of samples
     predictions = [sum(x_i * w_i for x_i, w_i in zip(x, weights)) for x in X]
@@ -99,27 +113,6 @@ def read_dataset(file_path: str):
     return inputs, output
 
 
-def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Preprocesses the dataset by removing non-numeric columns, handling missing values,
-    and normalizing the data.
-
-    :param df: pd.DataFrame - The raw dataset.
-    :return: pd.DataFrame - The preprocessed dataset.
-    """
-    # Remove non-numeric columns
-    df = df.select_dtypes(include=[np.number])
-
-    # Drop rows with NaN values or fill them
-    df = df.dropna()  # or df.fillna(df.mean())
-
-    # Normalize or standardize the data
-    for column in df.columns:
-        df[column] = (df[column] - df[column].mean()) / df[column].std()
-
-    return df
-
-
 def main() -> None:
     # Path to the dataset file
     file_path = 'data/dataset.xlsx'
@@ -128,7 +121,7 @@ def main() -> None:
     inputs, output = read_dataset(file_path)
 
     # Query a specific record, for example, the 3500th record
-    record_index = 3400
+    record_index = 300
 
     if record_index < len(inputs):
         print(f"Record {record_index}:")
@@ -138,9 +131,9 @@ def main() -> None:
         print(f"Record {record_index} is out of range.")
 
     # Model Hyperparameters
-    learning_rate = 0.01
+    learning_rate = 0.001
     iterations = 1000
-    l1_ratio = 0.5
+    l1_ratio = 0.4
     alpha = 0.1
 
     trained_weights = train_model(inputs, output, learning_rate, iterations, l1_ratio, alpha)
@@ -150,7 +143,8 @@ def main() -> None:
         print(f"Weight {i + 1}: {weight:.4f}")
 
     test_data = [
-        [4.8086, 5.6025, 6.273, 0.54222, 4.8271, 3.6353, 15.9566]
+        [1.38, 1.74, 2.54, 0.19, 1.13, 1.09, 4.73],
+        [26.16, 28.83, 33.88, 2.47, 29.85, 19.82, 85.68]
     ]
 
     predictions = predict_output(test_data, trained_weights)

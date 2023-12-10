@@ -1,0 +1,48 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+
+\begin{document}
+
+\title{Predicting Foreign Currency Values Using Logistic Regression and Elastic Net Regularization}
+
+\author{\IEEEauthorblockN{Your Name}
+\IEEEauthorblockA{\textit{Your Affiliation} \\
+\textit{Your Institution}\\
+City, Country \\
+email@address.com}
+}
+
+\maketitle
+
+\begin{abstract}
+This paper addresses the problem of predicting foreign currency values based on historical data of other currencies. We approach the problem using a logistic regression model augmented with Elastic Net regularization to avoid overfitting. The methodology encompasses data preprocessing, model training, and evaluation. The results show the model's efficacy in forecasting currency values, emphasizing the importance of feature selection and regularization in financial predictions.
+\end{abstract}
+
+\section{Introduction}
+The task of predicting foreign currency values poses significant challenges due to the dynamic and complex nature of financial markets. Accurate predictions are crucial for various economic and trading strategies. This study focuses on developing a machine learning model capable of forecasting the value of one currency based on the historical values of others.
+
+\section{Methodology}
+\subsection{Data Preparation}
+The study uses a dataset containing daily records of 8 different foreign currencies from 2005 to 2023. Seven currencies are used as input features, and one as the target output. Data preprocessing involved normalization and handling missing values.
+
+\subsection{Model Description}
+We employed logistic regression for prediction, incorporating Elastic Net regularization to balance the model's complexity and prevent overfitting. The model was trained using a gradient descent optimizer.
+
+\section{Discussion}
+The choice of logistic regression, typically used for classification, was based on its simplicity and interpretability. The inclusion of Elastic Net regularization was crucial in managing feature relevance and model complexity, especially given the collinearity present in financial datasets.
+
+\section{Conclusion and Future Work}
+The developed model demonstrates potential in predicting currency values. Future work should explore more complex models like neural networks for potentially improved accuracy. Further research could also delve into real-time prediction and the incorporation of additional economic indicators.
+
+\section*{Acknowledgment}
+The authors would like to thank...
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
