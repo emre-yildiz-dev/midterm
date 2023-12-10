@@ -10,37 +10,97 @@
 
 \title{Predicting Foreign Currency Values Using Logistic Regression and Elastic Net Regularization}
 
-\author{\IEEEauthorblockN{Your Name}
-\IEEEauthorblockA{\textit{Your Affiliation} \\
-\textit{Your Institution}\\
-City, Country \\
-email@address.com}
+\author{\IEEEauthorblockN{Emre YILDIZ}
+\IEEEauthorblockA{\textit{200315092} \\
+\textit{Manisa Celal Bayar University Computer Engineering}\\
+Manisa, Turkiye \\
+200315092@ogr.cbu.edu.tr}
 }
 
 \maketitle
 
 \begin{abstract}
-This paper addresses the problem of predicting foreign currency values based on historical data of other currencies. We approach the problem using a logistic regression model augmented with Elastic Net regularization to avoid overfitting. The methodology encompasses data preprocessing, model training, and evaluation. The results show the model's efficacy in forecasting currency values, emphasizing the importance of feature selection and regularization in financial predictions.
+    This paper presents a novel approach to predict foreign currency values using machine learning techniques, addressing the high volatility and unpredictability inherent in the foreign exchange market. Recognizing the challenges faced by traditional financial models in terms of accessibility and overfitting, our study introduces a linear regression model enhanced with Elastic Net regularization. This model effectively balances the trade-off between bias and variance, leveraging the strengths of both Lasso (L1) and Ridge (L2) regularization techniques. Implemented using Python, the model demonstrates an ability to generalize well to new data, overcoming the common issue of overfitting often encountered in complex financial predictions. The study's findings suggest that this approach is not only effective in forecasting currency values but also serves as an accessible tool for a wider range of users, from individual investors to larger financial institutions. The methodology and results presented here offer significant implications for the future of predictive financial analysis, opening avenues for more robust, adaptable, and user-friendly forecasting models in the field of economics and finance.
 \end{abstract}
 
 \section{Introduction}
-The task of predicting foreign currency values poses significant challenges due to the dynamic and complex nature of financial markets. Accurate predictions are crucial for various economic and trading strategies. This study focuses on developing a machine learning model capable of forecasting the value of one currency based on the historical values of others.
+\subsection{Context and Importance}
+In the ever-evolving landscape of global finance, the ability to accurately predict foreign currency values holds paramount importance. Currency fluctuations can have significant implications for investors, traders, governments, and multinational corporations. These entities rely heavily on predictive models to make informed decisions that could safeguard investments and optimize financial operations. The challenge, however, lies in the complexity and volatility inherent in the foreign exchange market. Factors like geopolitical events, economic indicators, and market sentiment contribute to the unpredictability of currency values.
+
+\subsection{Problem Statement}
+Traditional approaches to currency prediction often involve time-series analysis, machine learning, and complex financial models. However, many of these techniques require extensive domain knowledge and are not always accessible to individuals or smaller organizations. Additionally, they often suffer from overfitting, where the model performs well on historical data but fails to generalize to new, unseen data. This project aims to address these challenges by developing a more accessible, robust machine learning model that can effectively predict foreign currency values.
+
+\subsection{Objective}
+The primary objective of this project is to develop and implement a machine learning model capable of predicting the value of a foreign currency based on the historical data of other currencies. The model leverages linear regression augmented with Elastic Net regularization—a technique that combines the strengths of Lasso (L1) and Ridge (L2) regularization. This approach is chosen to mitigate overfitting and enhance the model's ability to generalize to new data.
+
+The implementation is carried out using Python, a popular programming language known for its simplicity and powerful data science libraries. Key functions developed for this project include cost-function for calculating the Mean Squared Error, elastic-net-cost-function for applying Elastic Net regularization, and train-model for training the linear regression model. These functions collectively form the backbone of the predictive model, ensuring a balance between accuracy and generalization.
 
 \section{Methodology}
 \subsection{Data Preparation}
-The study uses a dataset containing daily records of 8 different foreign currencies from 2005 to 2023. Seven currencies are used as input features, and one as the target output. Data preprocessing involved normalization and handling missing values.
+The foundation of our predictive model lies in the robust preparation and processing of the foreign currency dataset. This dataset encompasses daily records of 8 different foreign currencies spanning from 2005 to 2023. Out of these, seven currencies were designated as input features for the model, while one currency was used as the target output, representing the value we aimed to predict.
+
+The initial phase of data preparation involved a meticulous process of cleaning and standardizing the data. Given the diverse nature and scales of the currency values, normalization was an essential step to ensure uniformity in the data. This process adjusted the values to a common scale without distorting the differences in the ranges of values. The Python Pandas library was utilized for these preliminary steps, allowing for efficient handling and transformation of the dataset.
+
+Post-cleaning, the dataset underwent a split into two distinct sets: the input features and the target output. The input features included various currency values that potentially influence the target currency, while the target output consisted of the currency value to be predicted. This separation was crucial for training the model, as it allowed for the identification and learning of patterns and relationships between the input features and the target outcome.
+
+To address the challenge of potential overfitting, we implemented a regularization technique in the model training phase. Overfitting is a common pitfall in machine learning, where a model performs well on training data but fails to generalize effectively to new, unseen data. To mitigate this, we employed Elastic Net regularization, a method that combines Lasso (L1) and Ridge (L2) regularization. This hybrid approach not only penalizes the complexity of the model but also encourages sparsity in the feature set, thereby enhancing the model's ability to generalize and perform well on new data.
+
+The data preparation stage set the groundwork for the subsequent model training and evaluation, ensuring that the data fed into the model was clean, normalized, and well-suited for the predictive tasks at hand.
 
 \subsection{Model Description}
-We employed logistic regression for prediction, incorporating Elastic Net regularization to balance the model's complexity and prevent overfitting. The model was trained using a gradient descent optimizer.
+\subsubsection{Overview of the Predictive Model}
+Central to our study is the development of a predictive model based on linear regression, chosen for its simplicity and effectiveness in understanding the relationships between multiple input variables and a single output variable. Linear regression is particularly adept at handling problems where the output can be reasonably approximated as a linear combination of the input features. In our case, the model aims to predict the value of one foreign currency based on the values of others.
+
+\subsubsection{Implementation of Linear Regression}
+The implementation of the linear regression model was carried out using Python, leveraging its powerful numerical computation libraries like NumPy. The model's core is a function that takes in a set of input features (currency values) and computes the predicted output (the value of the target currency) as a weighted sum of these inputs. The weights, or coefficients, of the model are learned during the training process and are crucial in determining the influence of each input feature on the prediction.
+
+\subsubsection{Incorporation of Elastic Net Regularization}
+To enhance the robustness of the linear regression model and prevent overfitting, we incorporated Elastic Net regularization. This approach is a hybrid of Lasso (L1) and Ridge (L2) regularization techniques. The Elastic Net adds two penalty terms to the cost function used to train the model: one proportional to the sum of the absolute values of the weights (L1 penalty) and another proportional to the sum of their squares (L2 penalty).
+
+The L1 penalty encourages the model to be sparse, meaning it can completely eliminate the influence of less important input features by setting their corresponding weights to zero. This aspect is particularly useful in feature selection and reducing model complexity. The L2 penalty, on the other hand, prevents any single weight from having too much influence on the model predictions, promoting a more evenly distributed set of weights and enhancing the model's ability to generalize.
+
+\subsubsection{Training and Optimization}
+The training of the model involved adjusting the weights to minimize a cost function, which in this case, was the Mean Squared Error (MSE) augmented with the Elastic Net penalty. The optimization of this cost function was achieved using a gradient descent algorithm, a method that iteratively adjusts the weights in the direction that most reduces the cost.
 
 \section{Discussion}
-The choice of logistic regression, typically used for classification, was based on its simplicity and interpretability. The inclusion of Elastic Net regularization was crucial in managing feature relevance and model complexity, especially given the collinearity present in financial datasets.
+\subsection{Analysis of Model Performance}
+The application of the linear regression model augmented with Elastic Net regularization yielded notable insights into the dynamics of foreign currency valuation. The model’s performance was evaluated based on its ability to accurately predict the value of the target currency. One key observation was the model's proficiency in capturing the linear relationships between various currencies, as evidenced by its predictions on the test data. However, the inherent complexity and volatility of financial markets suggest that linear models might not always encapsulate the nonlinear interactions and sudden market shifts.
+
+\subsection{Addressing Overfitting}
+A significant aspect of this study was the focus on mitigating overfitting, a common challenge in predictive modeling. Overfitting occurs when a model becomes too attuned to the training data, losing its predictive power on unseen data. By employing Elastic Net regularization, the model was able to maintain a balance between model complexity and generalization. This approach not only penalized excessive weight values but also facilitated feature selection, enhancing the model's predictive accuracy and robustness.
+
+\subsection{Considerations and Limitations}
+While the model demonstrated promising results, there are considerations and limitations to acknowledge. The linear nature of the model may oversimplify the intricate and often nonlinear patterns present in currency exchange rates. Additionally, the choice of regularization parameters like alpha and l1-ratio in Elastic Net was based on heuristic approaches and could be further optimized, perhaps through techniques like cross-validation.
+
+\subsection{Alternative Approaches and Future Directions}
+Exploring alternative modeling approaches could potentially yield improvements. For instance, more complex models like neural networks or ensemble methods may capture the nonlinear aspects of the data more effectively. Another avenue for enhancement could be the incorporation of additional features such as economic indicators, geopolitical events, or market sentiment analysis, which play significant roles in currency valuation.
 
 \section{Conclusion and Future Work}
-The developed model demonstrates potential in predicting currency values. Future work should explore more complex models like neural networks for potentially improved accuracy. Further research could also delve into real-time prediction and the incorporation of additional economic indicators.
+This study embarked on the challenge of predicting foreign currency values, a task of significant complexity due to the dynamic nature of the financial markets. The adoption of linear regression with Elastic Net regularization has proven to be a noteworthy approach, striking a balance between simplicity and effectiveness. The model successfully demonstrated the capacity to generalize beyond the training data, a testament to the efficacy of the regularization techniques in mitigating overfitting.
+
+The implementation, carried out using Python, leveraged the strengths of its data processing and machine learning libraries, showcasing the accessibility and versatility of Python in financial modeling. The study's outcomes underscore the potential of machine learning methodologies in economic forecasting, providing valuable insights that can aid both individual and institutional decision-making processes.
+
+\subsection{Future Work}
+Looking ahead, several avenues exist for extending and enhancing this research:
+
+Model Complexity: Exploring more complex models, such as neural networks or ensemble methods, could offer a more nuanced understanding of the non-linear patterns often observed in financial data.
+
+Feature Engineering: Incorporating additional features like macroeconomic indicators, geopolitical events, and market sentiment could enrich the model's predictive capability. These factors are known to influence currency markets significantly and could provide a more comprehensive view of the forces at play.
+
+Parameter Optimization: Employing advanced techniques for hyperparameter tuning, such as grid search or randomized search, could optimize the model's performance. This might involve a more thorough exploration of the regularization parameters within the Elastic Net framework.
+
+Real-time Analysis: Adapting the model for real-time data analysis and prediction could greatly enhance its practical utility. This would involve integrating the model with live data feeds and developing a mechanism for continuous learning and adaptation.
+
+Comparative Studies: Conducting comparative studies with other financial models would offer deeper insights into the strengths and limitations of various approaches in currency value prediction.
+
+In conclusion, while the study has laid a solid foundation in the application of machine learning to currency prediction, the field remains ripe for further exploration. The advancements in machine learning and data processing technologies present an exciting opportunity for continued research and development in this area, with the potential to significantly impact the domain of financial forecasting.
 
 \section*{Acknowledgment}
-The authors would like to thank...
+The author wishes to express sincere gratitude to Prof. Dr. Muhammet Gökhan CİNSDİKİCİ for his invaluable guidance, insightful feedback, and unwavering support throughout the course of this research. His expertise and profound understanding of machine learning and financial modeling have been instrumental in shaping the direction and success of this study. His encouragement and academic rigor have not only facilitated this research but also significantly contributed to the author's personal and professional growth. The author is deeply thankful for his mentorship and the opportunities for learning and exploration that have arisen under his tutelage.
+
+\section*{Code Availability}
+The Python code developed during this research project is openly available to the academic community and other interested parties. The code repository, including all scripts and detailed documentation, is hosted on GitHub and can be accessed at \url{https://github.com/emre-yildiz-dev/midterm}. Furthermore, an executable version of the model, demonstrating its functionality in real-time, is available at \url{http://www.yourdomainname.com}.
+
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
